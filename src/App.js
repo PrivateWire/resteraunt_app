@@ -18,16 +18,16 @@ class App extends Component {
 
     //load data
     loadRestaurants=()=>{
-      this.requestResteraunts('GET','/restaurants').then((filteredResteraunts)=>{
+      this.requestResteraunts('GET','/restaurants', this.filterResponse).then((filteredResteraunts)=>{
           this.setState({restaurants:filteredResteraunts, loading:false})
       })
     }
 
     //Make Request and convert to JSON
-    requestResteraunts=(method,endPoint)=>{
+    requestResteraunts=(method,endPoint,onSuccess)=>{
         let baseURl = 'https://waraclecodetesting.azurewebsites.net/api';
         const options = {mode: 'cors', method:method, headers: new Headers({'Content-Type':'application/json'}),};
-        return fetch(baseURl+ endPoint,options).then(response => response.json()).then(this.filterResponse);
+        return fetch(baseURl+ endPoint,options).then(response => response.json()).then(onSuccess);
     }
 
     //Remove unwanted resteraunt
