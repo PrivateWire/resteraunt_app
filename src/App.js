@@ -18,16 +18,16 @@ class App extends Component {
 
     //load data
     loadRestaurants=()=>{
-      this.requestResteraunts('GET','/restaurants', this.filterResponse).then((filteredResteraunts)=>{
+      this.requestResteraunts('GET','/restaurants', this.filterResponse, this.onError).then((filteredResteraunts)=>{
           this.setState({restaurants:filteredResteraunts, loading:false})
       })
     }
 
     //Make Request and convert to JSON
-    requestResteraunts=(method,endPoint,onSuccess)=>{
+    requestResteraunts=(method,endPoint,onSuccess, onError)=>{
         let baseURl = 'https://waraclecodetesting.azurewebsites.net/api';
         const options = {mode: 'cors', method:method, headers: new Headers({'Content-Type':'application/json'}),};
-        return fetch(baseURl+ endPoint,options).then(response => response.json()).then(onSuccess);
+        return fetch(baseURl+ endPoint,options).then(response => response.json()).then(onSuccess).catch(onError);
     }
 
     //Remove unwanted resteraunt
@@ -36,7 +36,12 @@ class App extends Component {
         let filteredResteraunts = flattened.filter((resteraunt) => { return resteraunt.address.city !== 'Bielefeld'});
         return filteredResteraunts;
     }
-
+    
+    // Handle error
+    onError=(e)={
+     console.log( 'Some error has occurred',e.message);
+    }
+    
     render() {
         return (
             <div className="App">
